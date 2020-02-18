@@ -1,0 +1,326 @@
+--Fagadar Ionela-Catalina--
+
+
+drop table persoana;
+drop table deviz;
+drop table piesa;
+drop table piesa_deviz;
+
+1.a
+CREATE TABLE persoana
+(id NUMBER(6,0) NOT NULL, 
+nume VARCHAR2(40) NOT NULL, 
+email VARCHAR2(40) NOT NULL, 
+adresa VARCHAR2(40) NOT NULL);
+
+b.
+CREATE TABLE deviz
+(id_d NUMBER(6,0) NOT NULL, 
+data_introducere DATE NOT NULL,
+aparat VARCHAR2(30) NOT NULL,
+simptome VARCHAR2(40) NOT NULL,
+defect VARCHAR2(30),
+data_constatare DATE DEFAULT NULL,
+data_finalizare DATE DEFAULT NULL,
+durata NUMBER(8,2),
+manopera_ora NUMBER(8,2),
+total NUMBER(8,2),
+id_client NUMBER(6,0) NOT NULL,
+id_depanator NUMBER(6,0) NOT NULL);
+
+c.
+CREATE TABLE piesa
+(id_p NUMBER(6,0) NOT NULL, 
+descriere VARCHAR2(40) UNIQUE,
+fabricant VARCHAR2(30) UNIQUE,
+cantitate_stoc NUMBER(6,0) NOT NULL,
+pret_c NUMBER(6,0) NOT NULL);
+
+d.
+CREATE TABLE piesa_deviz
+(id_d NUMBER(6,0) NOT NULL, 
+id_p NUMBER(6,0) NOT NULL, 
+cantitate NUMBER(6,0) NOT NULL,
+pret_r NUMBER(6,0) NOT NULL,
+sursa VARCHAR2(30) NOT NULL);
+
+
+e.
+--chei primare/straine
+
+ALTER TABLE persoana ADD PRIMARY KEY(id);
+--ex ca functioneaza
+INSERT INTO Persoana(id,nume,email,adresa,telefon) VALUES(1,'Mures Elena','MuresElena@gmail.com','str. Gheorghe Doja nr.24','0732644367');
+INSERT INTO Persoana(id,nume,email,adresa,telefon) VALUES(null,'Mures Elena','MuresElena@gmail.com','str. Gheorghe Doja nr.24','0732644367');
+
+ALTER TABLE deviz ADD PRIMARY KEY(id_d);
+--ex ca functioneaza
+INSERT INTO Deviz(id_d,data_introducere,aparat,simptome,defect,data_constatare,data_finalizare,durata,manopera_ora,total,id_client,id_depanator) VALUES(12,'03-FEB-2018','Prajitor de paine Beko','aprindere stricata','rezistenta arsa','03-FEB-2018','05-MAY-2018',10,5,450,4,2);
+INSERT INTO Deviz(id_d,data_introducere,aparat,simptome,defect,data_constatare,data_finalizare,durata,manopera_ora,total,id_client,id_depanator) VALUES(null,'03-FEB-2018','Prajitor de paine Beko','aprindere stricata','rezistenta arsa','03-FEB-2018','05-MAY-2018',10,5,450,4,2);
+
+ALTER TABLE piesa ADD PRIMARY KEY(id_p);
+-- ex ca functioneaza
+INSERT INTO piesa(id_p,descriere,fabricant,cantitate_stoc,pret_c) VALUES(1,'rezistenta cuptor','Mano',2,400);
+INSERT INTO piesa(id_p,descriere,fabricant,cantitate_stoc,pret_c) VALUES(null,'rezistenta cuptor','Mano',2,400);
+
+ALTER TABLE deviz ADD FOREIGN KEY(id_client) REFERENCES persoana(id);
+--ex ca functioneaza: INSERT INTO Deviz(id_d,data_introducere,aparat,simptome,defect,data_constatare,data_finalizare,durata,manopera_ora,total,id_client,id_depanator) VALUES(17,'03-FEB-2018','Prajitor de paine Beko','aprindere stricata','rezistenta arsa','03-FEB-2018','05-MAY-2018',10,5,450,400,2);
+DELETE FROM persoana
+
+ALTER TABLE deviz ADD FOREIGN KEY(id_depanator) REFERENCES persoana(id);
+--ex ca functioneaza: INSERT INTO Deviz(id_d,data_introducere,aparat,simptome,defect,data_constatare,data_finalizare,durata,manopera_ora,total,id_client,id_depanator) VALUES(17,'03-FEB-2018','Prajitor de paine Beko','aprindere stricata','rezistenta arsa','03-FEB-2018','05-MAY-2018',10,5,450,4,200);
+DELETE FROM persoana
+
+ALTER TABLE piesa_deviz ADD FOREIGN KEY(id_d) REFERENCES deviz(id_d);
+--ex ca functioneaza: INSERT INTO piesa_deviz(id_d,id_p,cantitate,pret_r,sursa) VALUES(1700,4,1,400,'Mano');
+DELETE FROM deviz;
+
+ALTER TABLE piesa_deviz ADD FOREIGN KEY(id_p) REFERENCES piesa(id_p);
+--ex ca functioneaza: INSERT INTO piesa_deviz(id_d,id_p,cantitate,pret_r,sursa) VALUES(17,400,1,400,'Mano');
+DELETE FROM piesa;
+
+
+--constrangere
+ALTER TABLE piesa ADD CONSTRAINT piesa_descriere_fabricant_uk UNIQUE(descriere,fabricant);
+--ex ca functioneaza
+INSERT INTO piesa VALUES(5,'comutator','Fabricant',199,200);
+
+f.
+ALTER TABLE persoana ADD telefon VARCHAR2(10);
+
+--introducem date:
+INSERT INTO Persoana(id,nume,email,adresa,telefon) VALUES(1,'Pop Claudiu','pop.claudiu@gmail.com','str. Calea Turzii nr.121','0754635321');
+INSERT INTO Persoana(id,nume,email,adresa,telefon) VALUES(2,'Popa Mirel','popamirel@gmail.com','str. Calea Turzii nr.1','0754635987');
+INSERT INTO Persoana(id,nume,email,adresa,telefon) VALUES(3,'Luca Emil','lucaemil@gmail.com','str. G.Baritiu nr.21','0774677967');
+INSERT INTO Persoana(id,nume,email,adresa,telefon) VALUES(4,'Luca Maria','luca_maria@gmail.com','str. G.Baritiu nr.21','0773677967');
+INSERT INTO Persoana(id,nume,email,adresa,telefon) VALUES(5,'Muresan Maria','muresanmaria@gmail.com','str. Daicoviciu nr.8','0778675467');
+INSERT INTO Persoana(id,nume,email,adresa,telefon) VALUES(27,'Muresan Marian','muresanmarian@gmail.com','str. Daicoviciu nr.8','0778674567');
+INSERT INTO Persoana(id,nume,email,adresa,telefon) VALUES(101,'Mures Elena','MuresElena@gmail.com','str. Gheorghe Doja nr.24','0732644367');
+
+INSERT INTO Deviz(id_d,data_introducere,aparat,simptome,defect,data_constatare,data_finalizare,durata,manopera_ora,total,id_client,id_depanator) VALUES(123,'15-SEP-2018','frigider Arctic','racire incorecta','racitor','15-SEP-2018',NULL,NULL,NULL,0,4,1);
+INSERT INTO Deviz(id_d,data_introducere,aparat,simptome,defect,data_constatare,data_finalizare,durata,manopera_ora,total,id_client,id_depanator) VALUES(12,'25-APR-2018','cuptor microunde Beko','functionare proasta','buton pornire','25-APR-2018','25-JUN-2018',3,20,180,4,1);
+INSERT INTO Deviz(id_d,data_introducere,aparat,simptome,defect,data_constatare,data_finalizare,durata,manopera_ora,total,id_client,id_depanator) VALUES(13,'25-APR-2018','cuptor microunde Beko','functionare proasta','buton pornire','25-APR-2018','25-APR-2018',3,20,150,5,1);
+INSERT INTO Deviz(id_d,data_introducere,aparat,simptome,defect,data_constatare,data_finalizare,durata,manopera_ora,total,id_client,id_depanator) VALUES(14,'02-FEB-2018','televizor Teletech','inchideri neprevazute','comutator stricat','03-FEB-2018','05-FEB-2018',7,30,410,4,1);
+INSERT INTO Deviz(id_d,data_introducere,aparat,simptome,defect,data_constatare,data_finalizare,durata,manopera_ora,total,id_client,id_depanator) VALUES(15,'03-FEB-2018','Prajitor de paine Beko','aprindere stricata','rezistenta arsa','03-FEB-2018',NULL,0,0,0,4,1);
+INSERT INTO Deviz(id_d,data_introducere,aparat,simptome,defect,data_constatare,data_finalizare,durata,manopera_ora,total,id_client,id_depanator) VALUES(16,'03-FEB-2018','Prajitor de paine Beko','aprindere stricata','rezistenta arsa','03-FEB-2018','05-MAY-2018',10,50,900,4,2);
+
+INSERT INTO piesa(id_p,descriere,fabricant,cantitate_stoc,pret_c) VALUES(1,'comutator','Beko',9,200);
+INSERT INTO piesa(id_p,descriere,fabricant,cantitate_stoc,pret_c) VALUES(2,'racitor','Alca',9,350);
+INSERT INTO piesa(id_p,descriere,fabricant,cantitate_stoc,pret_c) VALUES(3,'buton pornire','Alpa',200,130);
+INSERT INTO piesa(id_p,descriere,fabricant,cantitate_stoc,pret_c) VALUES(4,'rezistenta cuptor','Mano',2,400);
+
+INSERT INTO piesa_deviz(id_d,id_p,cantitate,pret_r,sursa) VALUES(123,2,2,600,'Fabricant');
+INSERT INTO piesa_deviz(id_d,id_p,cantitate,pret_r,sursa) VALUES(123,1,1,220,'Fabricant');
+INSERT INTO piesa_deviz(id_d,id_p,cantitate,pret_r,sursa) VALUES(12,3,1,120,'Alpa');
+INSERT INTO piesa_deviz(id_d,id_p,cantitate,pret_r,sursa) VALUES(13,3,1,90,'Alpa');
+INSERT INTO piesa_deviz(id_d,id_p,cantitate,pret_r,sursa) VALUES(14,1,1,200,'Fabricant');
+INSERT INTO piesa_deviz(id_d,id_p,cantitate,pret_r,sursa) VALUES(15,4,1,450,'Mano');
+INSERT INTO piesa_deviz(id_d,id_p,cantitate,pret_r,sursa) VALUES(16,4,1,400,'Mano');
+
+2.
+a.
+ALTER TABLE deviz ADD CONSTRAINT data_incorecta CHECK(data_constatare<=data_finalizare)
+--ex ca functioneaza
+INSERT INTO Deviz(id_d,data_introducere,aparat,simptome,defect,data_constatare,data_finalizare,durata,manopera_ora,total,id_client,id_depanator) VALUES(53,'25-APR-2018','cuptor microunde Beko','functionare proasta','buton pornire','25-APR-2018','15-APR-2018',3,2,5,5,1); --nu se inroduce
+
+b.
+ALTER TABLE piesa ADD CONSTRAINT fabricant_incorect CHECK(fabricant<>'Fabricant' OR pret_c<=200)
+--ex ca functioneaza
+INSERT INTO piesa VALUES(5,'priza','Fabricant',199,400); --nu se introduce
+INSERT INTO piesa VALUES(5,'priza','Fabricant2',199,100);
+INSERT INTO piesa VALUES(6,'priza1','Fabricant3',199,400);
+INSERT INTO piesa VALUES(7,'priza2','Fabricant',199,100);
+
+3.
+a.
+SELECT id_d, data_introducere, aparat, simptome
+FROM deviz
+WHERE data_finalizare-data_constatare>30
+ORDER BY data_introducere;
+
+b.
+SELECT descriere
+FROM piesa
+WHERE cantitate_stoc<10
+ORDER BY cantitate_stoc DESC,descriere ASC;
+
+4.
+a.
+SELECT piesa.descriere, piesa.fabricant, piesa_deviz.sursa, piesa_deviz.cantitate, piesa_deviz.pret_r
+FROM Piesa 
+INNER JOIN piesa_deviz  ON Piesa.id_p = piesa_deviz.id_p 
+INNER JOIN deviz ON deviz.id_d = piesa_deviz.id_d
+WHERE deviz.data_finalizare IS NULL
+
+b.
+SELECT DISTINCT least(d1.id_depanator,d2.id_depanator) AS depanator1,greatest(d1.id_depanator,d2.id_depanator) as depanator2
+FROM
+(deviz d1
+JOIN deviz d2 ON d1.aparat= d2.aparat)
+WHERE d1.id_depanator != d2.id_depanator;
+
+5.
+a.
+SELECT descriere
+FROM piesa
+WHERE id_p = ANY(
+SELECT id_p 
+FROM piesa_deviz
+WHERE id_d = 123);
+
+b.
+SELECT pret_c,descriere
+FROM piesa
+WHERE pret_c> ALL(
+SELECT pret_r
+FROM piesa_deviz
+WHERE piesa_deviz.id_p = piesa.id_p )
+AND EXISTS(
+SELECT pret_r
+FROM piesa_deviz
+WHERE piesa_deviz.id_p = piesa.id_p );
+
+6.
+a.
+SELECT id_depanator,COUNT(id_d)
+FROM deviz
+GROUP BY id_depanator
+
+b.
+SELECT id_d deviz,id_p piesa 
+FROM piesa_deviz
+WHERE cantitate= (
+SELECT MAX(cantitate)
+FROM piesa_deviz)
+
+
+7.
+a.
+INSERT INTO Deviz(id_d,data_introducere,aparat,simptome,defect,data_constatare,data_finalizare,durata,manopera_ora,total,id_client,id_depanator) VALUES(23,'15-SEP-2018','TV Samsung','imagine desincroniata',NULL,NULL,NULL,0,0,0,101,27);
+sau
+INSERT INTO Deviz(id_d,data_introducere,aparat,simptome,id_client,id_depanator) VALUES(23,'15-SEP-2018','TV Samsung','imagine desincroniata',101,27);
+
+b.
+DELETE FROM persoana
+WHERE id NOT IN(
+SELECT id_client
+FROM deviz)
+AND id NOT IN(
+SELECT id_depanator
+FROM deviz)
+
+select *
+from persoana;
+
+c.
+UPDATE deviz
+SET 
+total = total-0.02*durata*manopera_ora, durata = durata - 0.02*durata
+WHERE id_d IN(12,13,14);
+
+8.
+a.
+create or replace trigger trigger_1
+before insert on piesa_deviz
+for each row
+
+begin
+
+update piesa
+set cantitate_stoc =cantitate_stoc - :new.cantitate
+where :new.id_p=id_p and cantitate_stoc >0;
+
+end;
+
+--ex ca functioneaza
+select*
+from piesa;
+
+insert into piesa_deviz 
+VALUES(16,3,2,200,'Mano');
+
+select*
+from piesa;
+
+insert into piesa_deviz 
+VALUES(16,3,1,200,'Mano');
+
+select*
+from piesa;
+b.
+
+CREATE OR REPLACE TRIGGER trigger2
+BEFORE UPDATE ON deviz
+FOR EACH ROW
+DECLARE 
+v_id NUMBER(6,0);
+BEGIN
+SELECT count(id_p) INTO v_id
+FROM piesa_deviz
+WHERE id_d = :old.id_d;
+
+if (v_id > 0) then
+if (:new.data_constatare <> :old.data_constatare)
+THEN RAISE_APPLICATION_ERROR(-20002,'Nu se poate modifica!');
+END IF;
+end if;
+END;
+
+--ex ca functioneaza:
+
+update deviz
+set data_introducere = '04-feb-2018'
+where id_d= 16;
+
+update deviz --nu se executa
+set data_constatare = '24-feb-2018'
+where id_d= 16;
+
+INSERT INTO Deviz(id_d,data_introducere,aparat,simptome,defect,data_constatare,data_finalizare,durata,manopera_ora,total,id_client,id_depanator) VALUES(17,'04-FEB-2018','Cuptor','aprindere stricata','rezistenta arsa','04-FEB-2018','05-FEB-2018',10,50,500,4,2);
+
+update deviz
+set data_constatare = '05-feb-2018'
+where id_d= 17;
+
+c.
+CREATE OR REPLACE VIEW PieseDeviz23  
+ AS SELECT d.id_d, data_introducere, aparat, simptome, defect, data_constatare, data_finalizare, durata, manopera_ora, total, a.nume as client, b.nume as depanator, descriere, fabricant, cantitate, pret_r
+FROM Persoana a, Persoana b, Deviz d, Piesa_Deviz c, Piesa p WHERE d.id_d = 23 AND a.id = d.id_client AND b.id = d.id_depanator AND c.id_d = d.id_d AND p.id_p = c.id_p;
+
+
+CREATE OR REPLACE TRIGGER trigger3
+INSTEAD OF INSERT ON PieseDeviz23
+FOR EACH ROW 
+DECLARE
+ida NUMBER(6,0);
+idb NUMBER(6,0);
+idp NUMBER(6,0);
+BEGIN 
+SELECT id into ida
+FROM persoana
+WHERE nume = :new.client;
+
+SELECT id into idb
+FROM persoana
+WHERE nume = :new.depanator;
+
+SELECT id_p into idp 
+FROM piesa
+WHERE descriere = :new.descriere AND fabricant = :new.fabricant;
+
+INSERT INTO deviz(id_d,data_introducere,aparat,simptome,defect,data_constatare,data_finalizare,durata,manopera_ora,total,id_client,id_depanator) 
+VALUES(23,:new.data_introducere,:new.aparat, :new.simptome, :new.defect, :new.data_constatare, :new.data_finalizare, :new.durata, :new.manopera_ora, :new.total,ida,idb);
+
+INSERT INTO piesa_deviz(id_d,id_p,cantitate,pret_r,sursa) VALUES(23,idp,:new.cantitate,:new.pret_r,:new.fabricant);
+END;
+
+--ex. ca functioneaza:
+
+delete from deviz
+where id_d=23;
+
+INSERT INTO PieseDeviz23 VALUES(23,'07-JUL-2018','Mixer Beko','buton stricat','comutator stricat','07-JUL-2018','08-JUL-2018',3,20,260,'Luca Maria','Pop Claudiu','comutator','Beko',1,220);
+
+select* from deviz;
+
+select* from piesa_deviz;
